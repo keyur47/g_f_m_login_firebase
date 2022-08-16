@@ -1,4 +1,5 @@
 import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -79,244 +80,257 @@ class LogIn extends StatelessWidget {
                               return ValueListenableBuilder(
                                   valueListenable: _test,
                                   builder: (context, bool value, _) {
-                                    return Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              vertical: 1.h),
-                                          child: CustomTextField(
-                                            textEditingController:
-                                                logInController.logInEmail,
-                                            titleText: AppString.email,
-                                            textInputAction:
-                                                TextInputAction.next,
-                                            hintText: AppString.yourEmailId,
-                                            keyboardType:
-                                                TextInputType.emailAddress,
-                                            onChanged: (String data) {
-                                              _handleButtonDisable();
-                                            },
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              vertical: 1.h),
-                                          child: CustomTextField(
-                                            onChanged: (String data) {
-                                              _handleButtonDisable();
-                                            },
-                                            textEditingController:
-                                                logInController.logInPassword,
-                                            titleText: AppString.password,
-                                            textInputAction:
-                                                TextInputAction.done,
-                                            hintText: AppString.password,
-                                            keyboardType: TextInputType.text,
-                                            obscure:
-                                                logInController.isObscure.value,
-                                            suffixIcon: GestureDetector(
-                                              onTap: () {
-                                                logInController
-                                                        .isObscure.value =
-                                                    !logInController
-                                                        .isObscure.value;
-                                                log("${logInController.isObscure.value}");
+                                    return Obx(
+                                      () => Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 1.h),
+                                            child: CustomTextField(
+                                              textEditingController:
+                                                  logInController.logInEmail,
+                                              titleText: AppString.email,
+                                              textInputAction:
+                                                  TextInputAction.next,
+                                              hintText: AppString.yourEmailId,
+                                              keyboardType:
+                                                  TextInputType.emailAddress,
+                                              onChanged: (String data) {
+                                                _handleButtonDisable();
                                               },
-                                              child: logInController
-                                                      .isObscure.value
-                                                  ? const Icon(
-                                                      Icons
-                                                          .remove_red_eye_outlined,
-                                                      color: Colors.grey,
-                                                    )
-                                                  : const Icon(
-                                                      Icons.remove_red_eye,
-                                                      color: Colors.grey,
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 1.h),
+                                            child: CustomTextField(
+                                              onChanged: (String data) {
+                                                _handleButtonDisable();
+                                              },
+                                              textEditingController:
+                                                  logInController.logInPassword,
+                                              titleText: AppString.password,
+                                              textInputAction:
+                                                  TextInputAction.done,
+                                              hintText: AppString.password,
+                                              keyboardType: TextInputType.text,
+                                              obscure: logInController
+                                                  .isObscure.value,
+                                              suffixIcon: Obx(
+                                                () => GestureDetector(
+                                                  onTap: () {
+                                                    logInController
+                                                            .isObscure.value =
+                                                        !logInController
+                                                            .isObscure.value;
+                                                    log("${logInController.isObscure.value}");
+                                                  },
+                                                  child: logInController
+                                                          .isObscure.value
+                                                      ? const Icon(
+                                                          Icons
+                                                              .remove_red_eye_outlined,
+                                                          color: Colors.grey,
+                                                        )
+                                                      : const Icon(
+                                                          Icons.remove_red_eye,
+                                                          color: Colors.grey,
+                                                        ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 1.h,
+                                          ),
+                                          GestureDetector(
+                                            onTap: () =>
+                                                Get.to(ForgetPassword()),
+                                            child: const Align(
+                                              alignment: Alignment.topRight,
+                                              child: Text(
+                                                  AppString.forgetPassword +
+                                                      AppString.questionMark),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 3.h,
+                                          ),
+                                          SizedBox(
+                                            width: double.infinity,
+                                            child: ValueListenableBuilder(
+                                              valueListenable: isDisable,
+                                              builder:
+                                                  (context, bool value, _) {
+                                                return CustomButton(
+                                                  change: value,
+                                                  onPressed: () async {
+                                                    await logInController
+                                                        .signInUsingEmailPassword(
+                                                            email:
+                                                                logInController
+                                                                    .logInEmail
+                                                                    .text
+                                                                    .trim(),
+                                                            password:
+                                                                logInController
+                                                                    .logInPassword
+                                                                    .text
+                                                                    .trim());
+                                                  },
+                                                  child: const Text(
+                                                      AppString.login),
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 2.5.h,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              const Text(
+                                                  "${AppString.dontHaveAnAccount} "),
+                                              const Text(
+                                                  "${AppString.questionMark} "),
+                                              GestureDetector(
+                                                onTap: () =>
+                                                    Get.toNamed(Routes.signUp),
+                                                child: const Text(
+                                                  AppString.signup,
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: AppColors
+                                                          .buttonColor),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 4.h,
+                                          ),
+                                          Row(
+                                            children: [
+                                              const Expanded(
+                                                child: Divider(
+                                                  thickness: 1.5,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: 2.w,
+                                              ),
+                                              const Text(AppString.orLoginWith),
+                                              SizedBox(
+                                                width: 2.w,
+                                              ),
+                                              const Expanded(
+                                                child: Divider(
+                                                  thickness: 1.5,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 2.h,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              SizedBox(
+                                                height: 40,
+                                                child: ElevatedButton(
+                                                  onPressed: () async {
+                                                    FirebaseService service =
+                                                        FirebaseService();
+                                                    await service
+                                                        .signInWithGoogle();
+                                                  },
+                                                  style: ButtonStyle(
+                                                    elevation:
+                                                        MaterialStateProperty
+                                                            .all(5),
+                                                    backgroundColor:
+                                                        MaterialStateProperty
+                                                            .all(AppColors
+                                                                .white),
+                                                    shape: MaterialStateProperty
+                                                        .all(
+                                                      const CircleBorder(),
                                                     ),
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 1.h,
-                                        ),
-                                        GestureDetector(
-                                          onTap: () => Get.to(ForgetPassword()),
-                                          child: const Align(
-                                            alignment: Alignment.topRight,
-                                            child: Text(
-                                                AppString.forgetPassword +
-                                                    AppString.questionMark),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 3.h,
-                                        ),
-                                        SizedBox(
-                                          width: double.infinity,
-                                          child: ValueListenableBuilder(
-                                            valueListenable: isDisable,
-                                            builder: (context, bool value, _) {
-                                              return CustomButton(
-                                                change: value,
-                                                onPressed: () async {
-                                                  await logInController
-                                                      .signInUsingEmailPassword(
-                                                          email: logInController
-                                                              .logInEmail.text
-                                                              .trim(),
-                                                          password:
-                                                              logInController
-                                                                  .logInPassword
-                                                                  .text
-                                                                  .trim());
-                                                },
-                                                child:
-                                                    const Text(AppString.login),
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 2.5.h,
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const Text(
-                                                "${AppString.dontHaveAnAccount} "),
-                                            const Text(
-                                                "${AppString.questionMark} "),
-                                            GestureDetector(
-                                              onTap: () =>
-                                                  Get.toNamed(Routes.signUp),
-                                              child: const Text(
-                                                AppString.signup,
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color:
-                                                        AppColors.buttonColor),
+                                                  ),
+                                                  child: SvgPicture.asset(
+                                                      AppImages.google),
+                                                ),
                                               ),
-                                            )
-                                          ],
-                                        ),
-                                        SizedBox(
-                                          height: 4.h,
-                                        ),
-                                        Row(
-                                          children: [
-                                            const Expanded(
-                                              child: Divider(
-                                                thickness: 1.5,
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: 2.w,
-                                            ),
-                                            const Text(AppString.orLoginWith),
-                                            SizedBox(
-                                              width: 2.w,
-                                            ),
-                                            const Expanded(
-                                              child: Divider(
-                                                thickness: 1.5,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(
-                                          height: 2.h,
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            SizedBox(
-                                              height: 40,
-                                              child: ElevatedButton(
-                                                onPressed: () async {
-                                                  FirebaseService service =
-                                                      FirebaseService();
-                                                  await service
-                                                      .signInWithGoogle();
-                                                },
-                                                style: ButtonStyle(
-                                                  elevation:
-                                                      MaterialStateProperty.all(
-                                                          5),
-                                                  backgroundColor:
-                                                      MaterialStateProperty.all(
-                                                          AppColors.white),
-                                                  shape:
-                                                      MaterialStateProperty.all(
-                                                    const CircleBorder(),
+                                              SizedBox(
+                                                height: 40,
+                                                child: ElevatedButton(
+                                                  onPressed: () {
+                                                    Get.toNamed(
+                                                        Routes.mobileScreen);
+                                                  },
+                                                  style: ButtonStyle(
+                                                    elevation:
+                                                        MaterialStateProperty
+                                                            .all(5),
+                                                    backgroundColor:
+                                                        MaterialStateProperty
+                                                            .all(AppColors
+                                                                .white),
+                                                    shape: MaterialStateProperty
+                                                        .all(
+                                                      const CircleBorder(),
+                                                    ),
+                                                  ),
+                                                  child: const Icon(
+                                                    Icons.phone_android,
+                                                    color: AppColors.black,
                                                   ),
                                                 ),
-                                                child: SvgPicture.asset(
-                                                    AppImages.google),
                                               ),
-                                            ),
-                                            SizedBox(
-                                              height: 40,
-                                              child: ElevatedButton(
-                                                onPressed: () {
-                                                  Get.toNamed(
-                                                      Routes.mobileScreen);
-                                                },
-                                                style: ButtonStyle(
-                                                  elevation:
-                                                      MaterialStateProperty.all(
-                                                          5),
-                                                  backgroundColor:
-                                                      MaterialStateProperty.all(
-                                                          AppColors.white),
-                                                  shape:
-                                                      MaterialStateProperty.all(
-                                                    const CircleBorder(),
+                                              SizedBox(
+                                                height: 40,
+                                                child: ElevatedButton(
+                                                  onPressed: () async {
+                                                    signInWithFacebook();
+                                                  },
+                                                  style: ButtonStyle(
+                                                    elevation:
+                                                        MaterialStateProperty
+                                                            .all(5),
+                                                    backgroundColor:
+                                                        MaterialStateProperty
+                                                            .all(AppColors
+                                                                .white),
+                                                    shape: MaterialStateProperty
+                                                        .all(
+                                                      const CircleBorder(),
+                                                    ),
+                                                  ),
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: Image.asset(
+                                                        AppImages.faceBook),
                                                   ),
                                                 ),
-                                                child: const Icon(
-                                                  Icons.phone_android,
-                                                  color: AppColors.black,
-                                                ),
                                               ),
-                                            ),
-                                            SizedBox(
-                                              height: 40,
-                                              child: ElevatedButton(
-                                                onPressed: () async {
-                                                  signInWithFacebook();
-                                                },
-                                                style: ButtonStyle(
-                                                  elevation:
-                                                      MaterialStateProperty.all(
-                                                          5),
-                                                  backgroundColor:
-                                                      MaterialStateProperty.all(
-                                                          AppColors.white),
-                                                  shape:
-                                                      MaterialStateProperty.all(
-                                                    const CircleBorder(),
-                                                  ),
-                                                ),
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: Image.asset(
-                                                      AppImages.faceBook),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(
-                                          height: 2.h,
-                                        ),
-                                      ],
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 2.h,
+                                          ),
+                                        ],
+                                      ),
                                     );
                                   });
                             }),
